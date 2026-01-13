@@ -1,2 +1,5 @@
 *.py linguist-detectable
 *.py linguist-language=Python
+src/** linguist-vendored
+config/** linguist-vendored
+requirements.txt linguist-vendored
