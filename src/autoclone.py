@@ -116,28 +116,25 @@ class AutoClone(object):
         self.get_and_write_submitted_codes()
 
     @staticmethod
-    def get_code(contest_id: str, submission_id: int) -> str:
-        """
-        Get code from AtCoder page
-
-        Parameters
-        ----------
-        contest_id : str
-            target contest_id
-        submission_id : int
-            target submissio_id
-
-        Returns
-        -------
-        str
-            str of raw code without extension
-        """
+    def get_code(self, contest_id, submission_id):
         submission_url = (
             f"https://atcoder.jp/contests/{contest_id}/submissions/{submission_id}"
         )
-        return BeautifulSoup(
-            requests.get(submission_url).content, "html.parser"
-        ).pre.string
+        # --- ここからデバッグ用に追加 ---
+        print(f"DEBUG: Accessing {submission_url}")
+        res = requests.get(submission_url)
+        print(f"DEBUG: Status Code: {res.status_code}")
+        # ------------------------------
+
+        soup = BeautifulSoup(res.content, "html.parser")
+        
+        
+        pre_tag = soup.find("pre")
+        if pre_tag is None:
+            print("DEBUG: <pre> tag not found! The page structure might be different.")
+            return "" 
+            
+        return pre_tag.string
 
     @staticmethod
     def write_code(code, contest_id, problem_id, language) -> None:
