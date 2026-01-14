@@ -116,22 +116,25 @@ class AutoClone(object):
         self.get_and_write_submitted_codes()
 
     @staticmethod
-    def get_code(self, contest_id, submission_id):
+    def get_code(self, contest_id, submission_id): # ←ここがちゃんと2つの引数になってるか確認！
         submission_url = (
             f"https://atcoder.jp/contests/{contest_id}/submissions/{submission_id}"
         )
-        # --- ここからデバッグ用に追加 ---
+        
+        # デバッグ用
         print(f"DEBUG: Accessing {submission_url}")
+        
         res = requests.get(submission_url)
         print(f"DEBUG: Status Code: {res.status_code}")
-        # ------------------------------
-
+        
         soup = BeautifulSoup(res.content, "html.parser")
         
-        
+        # タグを探す
         pre_tag = soup.find("pre")
+        
         if pre_tag is None:
-            print("DEBUG: <pre> tag not found! The page structure might be different.")
+            # タグが見つからない場合は、原因特定のヒントを出す
+            print("DEBUG: <pre> tag not found. Check if the URL is correct or if login is needed.")
             return "" 
             
         return pre_tag.string
